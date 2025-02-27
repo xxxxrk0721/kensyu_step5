@@ -1,18 +1,7 @@
 <?php
-    // DB接続設定
-    $host     = 'localhost';
-    $dbname   = 'kensyu_tsk01';
-    $user     = 'root';
-    $password = 'root';
+    require_once "db_connect.php"; // DB接続ファイルを読み込む
 
-    // DSN文字列（MySQLの場合）
-    $dsn = "mysql:host=$host;port=8889;dbname=$dbname;charset=utf8";
-    try {
-    $pdo = new PDO($dsn, $user, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (PDOException $e) {
-        die("データベース接続に失敗しました: " . $e->getMessage());
-    }
+    $pdo = db_connect(); // DB接続を取得
     $stmt = $pdo->prepare('SELECT * FROM task_list WHERE del_flg = 0 ORDER BY id');
     if(!$stmt) {
         die(print_r($pdo->errorInfo(), true));
@@ -39,11 +28,8 @@
     <!--        レイアウト調整領域（ヘッダー）-->
     <div class="header_inner">
         <!--            編集画面遷移用ボタン-->
-<!--        <div class="edit_button">-->
-<!--            <a href="#">編集</a>-->
-<!--        </div>-->
         <div class="tsk_tittle">
-            <h1>Task Hub</h1>
+            <h1>業務進捗ダッシュボード</h1>
         </div>
 
     </div>
@@ -58,21 +44,20 @@
             <div class="button_area">
             <!--            検索画面遷移用ボタン-->
                 <div class="search_button">
-                    <a href="search.php">Search</a>
+                    <a href="search.php">タスク検索</a>
                 </div>
                 <div class="edit_button">
-                    <input type="submit" value="Edit">
+                    <input type="submit" value="タスク編集">
                 </div>
             </div>
             <table class="task">
                 <tr class="title">
-                    <th class="id">ID</th>
-                    <th class="tsk_nm">Task Name</th>
-                    <th class="start">Start ymd</th>
-                    <th class="end">End ymd</th>
-                    <th class="tsk">Task details</th>
-                    <th class="state">Status</th>
-<!--                    <th class="edit">編集</th>-->
+                    <th class="id">項番</th>
+                    <th class="tsk_nm">タスク名称</th>
+                    <th class="start">開始日▼▲</th>
+                    <th class="end">終了日▼▲</th>
+                    <th class="tsk">内容</th>
+                    <th class="state">進捗状況</th>
                 </tr>
                 <?php foreach ($results as $row): ?>
 
@@ -82,12 +67,29 @@
                         <td class="start"><?= htmlspecialchars($row['ymd_to'], ENT_QUOTES, 'UTF-8'); ?></td>
                         <td class="end"><?= htmlspecialchars($row['ymd_from'], ENT_QUOTES, 'UTF-8'); ?></td>
                         <td class="tsk"><?= htmlspecialchars($row['task_content'], ENT_QUOTES, 'UTF-8'); ?></td>
-                        <td class="state"><?= htmlspecialchars($row['syori_status'], ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td class="state">
+                            <?php
+                                switch ($row['syori_status']) {
+                                    case 1:
+                                        echo '未着手';
+                                        break;
+                                    case 2:
+                                        echo '対応中';
+                                        break;
+                                    case 3:
+                                        echo '完了';
+                                        break;
+                                    default:
+                                        echo '不明';
+                                }
+                            ?>
+                        </td>
 <!--                        <td><input type="submit" value="編集"></td>-->
                     </tr>
 
                 <?php endforeach; ?>
             </table>
+
         </form>
     </div>
 </div>
@@ -95,7 +97,39 @@
 <footer>
 
 </footer>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let sortOrder = 1; // 1: 昇順, -1: 降順
 
+        function sortTable(columnClass) {
+            const table = document.querySelector(".task");
+            const tbody = table.querySelector("tbody") || table; // `tbody` がない場合、`table` で処理
+            const rows = Array.from(tbody.querySelectorAll(".tsk_content"));
+
+            // ソート処理
+            rows.sort((rowA, rowB) => {
+                let dateA = new Date(rowA.querySelector("." + columnClass).textContent.trim());
+                let dateB = new Date(rowB.querySelector("." + columnClass).textContent.trim());
+
+                return (dateA - dateB) * sortOrder;
+            });
+
+            // ソート順を逆にする（昇順⇔降順）
+            sortOrder *= -1;
+
+            // テーブルのデータを並び替え
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        // クリックイベントを設定
+        document.querySelector(".start").addEventListener("click", function () {
+            sortTable("start");
+        });
+        document.querySelector(".end").addEventListener("click", function () {
+            sortTable("end");
+        });
+    });
+</script>
 
 </body>
 </html>

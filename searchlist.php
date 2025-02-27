@@ -1,29 +1,19 @@
 <?php
-//if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // DB接続設定
-    $host = 'localhost';
-    $dbname = 'kensyu_tsk01';
-    $user = 'root';
-    $password = 'root';
 
-    // DSN文字列（MySQLの場合）
-    $dsn = "mysql:host=$host;port=8889;dbname=$dbname;charset=utf8";
-    try {
-        $pdo = new PDO($dsn, $user, $password);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (PDOException $e) {
-        die("データベース接続に失敗しました: " . $e->getMessage());
-    }
+require_once "db_connect.php"; // DB接続ファイルを読み込む
+$pdo = db_connect(); // DB接続を取得
 
 // フォームからのデータ取得
+var_dump($_POST);
 $task_name = $_POST['task_name'] ?? '';
-$ymd_search = $_POST['ymd_search'] ?? '';
+$str_ymd_search = $_POST['str_ymd_search'] ?? '';
+$end_ymd_search = $_POST['end_ymd_search'] ?? '';
 $syori_status = $_POST['syori_status'] ?? '';
 
 // 検索処理
 $results = [];
 
-if (!empty($task_name) || !empty($ymd_search) || !empty($syori_status)) {
+if (!empty($task_name) || !empty($str_ymd_search) || !empty($end_ymd_search) || !empty($syori_status)) {
     // 検索用SQLの初期化
     $sql = "SELECT * FROM task_list WHERE 1=1";
     $params = [];
@@ -34,12 +24,19 @@ if (!empty($task_name) || !empty($ymd_search) || !empty($syori_status)) {
         $params[':task_name'] = "%{$task_name}%";
     }
 
-    // 日付検索の条件を追加
-    if (!empty($ymd_search)) {
-        $sql .= " AND (ymd_to LIKE :ymd_search OR ymd_from LIKE :ymd_search) AND del_flg=0";
-        $params[':ymd_search'] = "%{$ymd_search}%";
+    if (!empty($str_ymd_search) && !empty($emd_ymd_search)) {
+
+        // SQL文で `BETWEEN` を使用
+        $sql .= " AND (ymd_to BETWEEN :str_ymd_search AND :emd_ymd_search) AND (ymd_from BETWEEN :str_ymd_search AND :emd_ymd_search) AND del_flg=0";
+        $params[':str_ymd_search'] = $str_ymd_search;
+        $params[':emd_ymd_search'] = $emd_ymd_search;
     }
 
+// デバッグ用ログ
+    error_log("実行SQL: " . $sql);
+    foreach ($params as $key => $value) {
+        error_log("バインド: $key = $value");
+    }
     // ステータス検索の条件を追加
     if (!empty($syori_status)) {
         $sql .= " AND syori_status = :syori_status AND del_flg=0";
@@ -57,6 +54,7 @@ if (!empty($task_name) || !empty($ymd_search) || !empty($syori_status)) {
     // SQL実行
     $stmt->execute();
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//    ver_dump($results);
 }
 ?>
 
@@ -74,7 +72,7 @@ if (!empty($task_name) || !empty($ymd_search) || !empty($syori_status)) {
 <body>
     <header>
         <div class="tsk_tittle">
-            <h1>Search Results</h1>
+            <h1>検索結果</h1>
         </div>
     </header>
 <!--メイン-->
@@ -82,10 +80,10 @@ if (!empty($task_name) || !empty($ymd_search) || !empty($syori_status)) {
         <div class="main_inner">
             <div class="button_area">
                 <div class="allnemu_button">
-                    <a href='index.php'>All menu</a>
+                    <a href='index.php'>タスク一覧へ戻る</a>
                 </div>
                 <div class="search_button">
-                    <a href="search.php">Search</a>
+                    <a href="search.php">検索画面へ戻る</a>
                 </div>
             </div>
             <div class="status">
@@ -96,7 +94,7 @@ if (!empty($task_name) || !empty($ymd_search) || !empty($syori_status)) {
 
 
                     foreach ($statuses as $status) {
-                        echo "<p>Status：";
+                        echo "<p>ステータス：";
                         switch ($status) {
                             case 1:
                                 echo '未着手';
@@ -116,11 +114,11 @@ if (!empty($task_name) || !empty($ymd_search) || !empty($syori_status)) {
             </div>
                 <table class="task">
                     <tr class="title">
-                        <th>ID</th>
-                        <th>Task name</th>
-                        <th>Start ymd</th>
-                        <th>End ymd</th>
-                        <th>Task details</th>
+                        <th>項番</th>
+                        <th>タスク名称</th>
+                        <th>開始日</th>
+                        <th>終了日</th>
+                        <th>内容</th>
                     </tr>
                     <?php foreach ($results as $row): ?>
                     <tr class="tsk_content">
@@ -136,8 +134,6 @@ if (!empty($task_name) || !empty($ymd_search) || !empty($syori_status)) {
                     echo "対象の一覧がありません。";
                 }
 ?>
-<!--            </div>-->
-
         </div>
     </div>
 <!--フッター-->

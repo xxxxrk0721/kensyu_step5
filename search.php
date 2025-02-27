@@ -1,18 +1,7 @@
 <?php
-// DB接続設定
-$host     = 'localhost';
-$dbname   = 'kensyu_tsk01';
-$user     = 'root';
-$password = 'root';
 
-// DSN文字列（MySQLの場合）
-$dsn = "mysql:host=$host;port=8889;dbname=$dbname;charset=utf8";
-try {
-    $pdo = new PDO($dsn, $user, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("データベース接続に失敗しました: " . $e->getMessage());
-}
+require_once "db_connect.php"; // DB接続ファイルを読み込む
+$pdo = db_connect(); // DB接続を取得
 $stmt = $pdo->prepare('SELECT * FROM task_list WHERE del_flg = 0 ORDER BY id');
 if(!$stmt) {
     die(print_r($pdo->errorInfo(), true));
@@ -36,7 +25,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <header>
         <div class="tsk_tittle">
-            <h1>Search Page</h1>
+            <h1>タスク検索画面</h1>
         </div>
     </header>
 <!--メイン-->
@@ -45,36 +34,34 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="button_area">
                 <!--            一覧画面遷移用ボタン-->
                 <div class="allmenu_button">
-                    <a href="index.php">All menu</a>
+                    <a href="index.php">タスク一覧へ戻る</a>
                 </div>
 
 <!--                ステータス検索-->
                 <form action="searchlist.php" method="post">
                     <div class="status_name">
-                        <p>status search:</p>
+                        <p>ステータス:</p>
                     </div>
                     <select name="syori_status">
                         <option value=1>未着手</option>
                         <option value=2>対応中</option>
                         <option value=3>完了</option>
                     </select>
-                    <input type="submit" value="Search">
-                </form>
 <!--                タスク名検索-->
-                <form action="searchlist.php" method="post">
                     <div class="tsk_name">
-                        <p>task name search:</p>
+                        <p>タスク名称:</p>
                     </div>
                     <input type="text" name="task_name" value="">
-                    <input type="submit" value="Search">
-                </form>
 <!--                日付検索-->
-                <form action="searchlist.php" method="post">
                     <div class="ymd_name">
-                        <p>ymd search:</p>
+                        <p>開始日:</p>
                     </div>
-                    <input type="text" name="ymd_search" value="">
-                    <input type="submit" value="Search">
+                    <input type="date" name="str_ymd_search" value="">
+                    <div class="ymd_name">
+                        <p>終了日:</p>
+                    </div>
+                    <input type="date" name="emd_ymd_search" value="">
+                    <input type="submit" value="検索">
                 </form>
             </div>
         </div>

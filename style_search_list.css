@@ -22,11 +22,14 @@
 }
 
 .allnemu_button a, .search_button a {
-    background-color: #f0f0f0;
+    /*background-color: #f0f0f0;*/
     color: #B85C38;
     text-decoration: none; /* aタグの下線を消す */
     font-size: 16px;
     padding: 10px 20px;
+    border: 1px solid #B85C38;
+    border-radius: 50px;
+    background-color: #fafafa;
 }
 
 .tsk_tittle {

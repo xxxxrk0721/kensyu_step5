@@ -18,27 +18,24 @@ body {
     border-bottom: 1px solid #B85C38;
 }
 
-.allmenu_button {
+.allmenu_button, .edit_button {
     margin: 10px;
     padding: 10px;
 }
 
-.allmenu_button a {
-    background-color: #f0f0f0;
+.allmenu_button a, .edit_button a {
     color: #B85C38;
     text-decoration: none; /* aタグの下線を消す */
     font-size: 16px;
     padding: 10px 20px;
+    border: 1px solid #B85C38;
+    border-radius: 50px;
+    background-color: #fafafa;
 }
 
 .update_output {
-    /*display: flex;*/
-    /*justify-content: center;*/
-    /*align-items: center;*/
     color: #B85C38;
-    /*font-weight: bold;*/
     margin: 20px;
-    /*font-size: 10px;*/
 }
 
 .update_output p {

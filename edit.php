@@ -1,18 +1,7 @@
 <?php
-// DB接続設定
-$host     = 'localhost';
-$dbname   = 'kensyu_tsk01';
-$user     = 'root';
-$password = 'root';
 
-// DSN文字列（MySQLの場合）
-$dsn = "mysql:host=$host;port=8889;dbname=$dbname;charset=utf8";
-try {
-    $pdo = new PDO($dsn, $user, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("データベース接続に失敗しました: " . $e->getMessage());
-}
+require_once "db_connect.php"; // DB接続ファイルを読み込む
+$pdo = db_connect(); // DB接続を取得
 $stmt = $pdo->prepare('SELECT * FROM task_list WHERE del_flg = 0 ORDER BY id');
 if(!$stmt) {
     die(print_r($pdo->errorInfo(), true));
@@ -40,7 +29,7 @@ $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <!--        レイアウト調整領域（ヘッダー）-->
     <div class="header_inner">
         <div class="tsk_tittle">
-            <h1>Edit task</h1>
+            <h1>タスク編集画面</h1>
         </div>
     </div>
 </header>
@@ -54,26 +43,24 @@ $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="button_area">
                 <!--            一覧画面遷移用ボタン-->
                 <div class="allnemu_button">
-                    <a href="index.php">All menu</a>
+                    <a href="index.php">タスク一覧へ戻る</a>
                 </div>
                 <div class="update_button">
-                    <input type="submit" value="Update">
+                    <input type="submit" value="タスクを更新">
                 </div>
             </div>
             <table class="task">
                 <tr class="title">
-                    <th>ID</th>
-                    <th>Task name</th>
-                    <th>Start ymd</th>
-                    <th>End ymd</th>
-                    <th>Task details</th>
-                    <th>Status</th>
-                    <th>Del flg</th>
+                    <th>項番</th>
+                    <th>タスク名称</th>
+                    <th>開始日</th>
+                    <th>終了日</th>
+                    <th>内容</th>
+                    <th>進捗状況</th>
+                    <th>削除区分</th>
                 </tr>
                 <?php foreach ($tasks as $index => $task): ?>
-    <!--                <form action="update.php" method="post">-->
                     <tr class="tsk_content">
-
                         <td>
                             <!-- ID を表示（編集不可） -->
                             <input type="text" name="tasks[<?= $index ?>][id]" value="<?= htmlspecialchars($task['id'], ENT_QUOTES, 'UTF-8'); ?>" readonly>
@@ -82,19 +69,15 @@ $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </td>
                         <td>
                             <input type="text" name="tasks[<?= $index ?>][task_name]" value="<?= htmlspecialchars($task['task_name'], ENT_QUOTES, 'UTF-8'); ?>">
-<!--                            <input type="text" name="task_name" value="--><?php //= htmlspecialchars($row['task_name'], ENT_QUOTES, 'UTF-8'); ?><!--">-->
                         </td>
                         <td>
                             <input type="date" name="tasks[<?= $index ?>][ymd_to]" value="<?= $task['ymd_to'] ?>">
-<!--                            <input type="date" name="ymd_to" value="--><?php //= htmlspecialchars($row['ymd_to'], ENT_QUOTES, 'UTF-8'); ?><!--">-->
                         </td>
                         <td>
                             <input type="date" name="tasks[<?= $index ?>][ymd_from]" value="<?= $task['ymd_from'] ?>">
-<!--                            <input type="date" name="ymd_from" value="--><?php //= htmlspecialchars($row['ymd_from'], ENT_QUOTES, 'UTF-8'); ?><!--">-->
                         </td>
                         <td>
                             <input type="text" name="tasks[<?= $index ?>][task_content]" value="<?= htmlspecialchars($task['task_content'], ENT_QUOTES, 'UTF-8'); ?>">
-<!--                            <input type="text" name="task_content" value="--><?php //= htmlspecialchars($row['task_content'], ENT_QUOTES, 'UTF-8'); ?><!--">-->
                         </td>
                         <td>
                             <select name="tasks[<?= $index ?>][syori_status]">
@@ -109,15 +92,7 @@ $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <option value=1 <?= $task['del_flg'] == 1 ? 'selected' : '' ?>>削除</option>
                             </select>
                         </td>
-<!--                        <td>-->
-<!--                            <input type="submit" value="更新">-->
-<!--                        </td>-->
                     </tr>
-
-    <!--                <form action="delete.php" method="post">-->
-    <!--                    <input type="hidden" name="id" value="--><?php //= htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8'); ?><!--">-->
-    <!--                    <input type="submit" value="削除">-->
-    <!--                </form>-->
                 <?php endforeach; ?>
             </table>
         </form>
@@ -126,5 +101,59 @@ $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <footer>
 
 </footer>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll("select[name$='[syori_status]']").forEach(select => {
+            select.addEventListener("change", function () {
+                const taskRow = this.closest("tr"); // 選択された行の `<tr>` を取得
+                const taskId = taskRow.querySelector("input[name$='[id_hidden]']").value; // 隠しID取得
+                const newStatus = this.value; // 新しいステータス値を取得
+
+                console.log("送信するID:", taskId);
+                console.log("送信する新ステータス:", newStatus);
+                console.log("this:", this);
+                console.log("親要素:", this.parentElement);
+                console.log("祖先要素:", this.closest("tr"));
+                console.log("taskRow:", taskRow);
+
+                // 送信データを作成
+                const formData = new FormData();
+                formData.append("id", taskId);
+                formData.append("syori_status", newStatus);
+
+                // 非同期通信でデータを送信
+                fetch("update_status.php", {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("サーバーからのレスポンス:", data);
+                        if (data.success) {
+                            alert("ステータスの更新を行いました。");
+                        } else {
+                            alert("ステータスの更新に失敗しました。");
+                            console.error("エラー詳細:", data);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("通信エラー:", error);
+                        alert("通信エラーが発生しました。");
+                    });
+            });
+        });
+        document.querySelectorAll("input[type='date']").forEach(input => {
+            input.addEventListener("change", function() {
+                const datePattern = /^\d{4}\/\d{2}\/\d{2}$/; // yyyy/mm/dd フォーマット
+                const value = this.value.replace(/-/g, "/"); // ハイフンをスラッシュに変換
+
+                if (!datePattern.test(value)) {
+                    alert("日付は yyyy/mm/dd の形式で入力してください。");
+                    this.value = ""; // 入力をクリア
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

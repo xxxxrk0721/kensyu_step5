@@ -3,10 +3,6 @@
     width: 90%;
 }
 
-/*.search_button {*/
-/*    text-align: right;*/
-/*}*/
-
 .main_inner {
     margin: 0 auto;
     width: 90%;
@@ -23,7 +19,6 @@ form {
     margin: 0 auto;
     border-bottom: 0.5px solid #C97D5D;
     border-left: 0.5px solid #C97D5D;
-    /*border-right: 0.5px solid #C97D5D;*/
 }
 
 th:nth-child(1), td:nth-child(1) { width: 5%; }
@@ -32,7 +27,6 @@ th:nth-child(3), td:nth-child(3) { width: 10%; }
 th:nth-child(4), td:nth-child(4) { width: 10%; }
 th:nth-child(5), td:nth-child(5) { width: 45%; }
 th:nth-child(6), td:nth-child(6) { width: 12%; }
-/*th:nth-child(7), td:nth-child(7) { width: 5%; }*/
 
 table {
     width: 100%; /* テーブル全体の幅を100%にする */
@@ -43,7 +37,6 @@ table {
     margin: 0 auto;
     background-color: #fff;
     border-spacing: 0; /* 各セルの枠線の間に隙間をなくす */
-    /*display: block;*/
 }
 
 th {
@@ -60,7 +53,6 @@ th {
 
 td {
     border-right: 0.5px solid #C97D5D; /* 枠線をつける */
-    /*border-bottom: 0.5px solid #C97D5D; !* 枠線をつける *!*/
     overflow-wrap: break-word;
     word-break: break-word;
     height: 50px;
@@ -73,7 +65,6 @@ td {
     box-sizing: border-box;
     background-color: #fafafa;
     color: #682A19;
-    /*border-color: #F8D3C1;*/
 }
 
 
@@ -86,7 +77,6 @@ td {
 }
 
 .edit_button, .search_button {
-    margin-left: 45px;
     display: inline-block;  /* インラインブロックで横並び可能 */
     background-color: transparent;
     color: #B85C38;  /* テキストカラー（メインカラー） */
@@ -102,32 +92,23 @@ input[type="submit"], .search_button a {
     align-items: center; /* 縦中央揃え */
     text-decoration: none; /* aタグの下線を消す */
     text-align: center;
-    border: none;
     font-weight: normal;
     font-size: 18px;
-    padding: 10px 20px;
+    padding: 10px 30px;
     color: #B85C38;
-}
-
-.tsk_content, .title {
-    /*margin: 0 auto;*/
-    /*width: 100%;*/
-    /*height: 100%;*/
+    border: 1px solid #B85C38;
+    border-radius: 50px;
+    background-color: #fafafa;
 }
 
 .tsk_tittle {
     display: block;
-    /*justify-content: center;*/
-    /*align-items: center;*/
     text-align: left;
     margin: 80px auto 0 auto;
-    /*margin: 0 auto;*/
-    /*width: 90%;*/
 }
 
 .tsk_tittle h1 {
     margin: 80px auto 0 30px;
-    /*background-color: #FFF;*/
     color: #B85C38;
 }
 

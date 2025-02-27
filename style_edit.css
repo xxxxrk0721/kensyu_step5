@@ -12,8 +12,6 @@
     display: flex;
     list-style: none;
     border-left: 0.5px solid #C97D5D;
-    /*border-bottom: 0.5px solid #C97D5D;*/
-    /*border-left: 0.5px solid #C97D5D;*/
 }
 
 th:nth-child(1), td:nth-child(1) { width: 5%; }
@@ -23,7 +21,6 @@ th:nth-child(4), td:nth-child(4) { width: 10%; }
 th:nth-child(5), td:nth-child(5) { width: 37%; }
 th:nth-child(6), td:nth-child(6) { width: 10%; }
 th:nth-child(7), td:nth-child(7) { width: 8%; }
-/*th:nth-child(8), td:nth-child(8) { width: 8%; }*/
 
 table {
     width: 100%; /* テーブル全体の幅を100%にする */
@@ -42,44 +39,32 @@ th {
     word-wrap: break-word; /* 長い単語を折り返す */
     background-color: #E3A98A; /* ヘッダーの背景色 */
     color: #fff;
-    /*background-color: #f2f2f2; !* ヘッダーの背景色 *!*/
 }
 
 td {
     border-right: 0.5px solid #C97D5D; /* 枠線をつける */
     border-bottom: 0.5px solid #C97D5D; /* 枠線をつける */
-    /*padding: 10px; !* 余白を設定 *!*/
     text-align: center; /* 文字を中央揃え */
     word-wrap: break-word; /* 長い単語を折り返す */
     height: 50px;
     display: flex;
     justify-content: center; /* 水平方向の中央揃え */
     align-items: center; /* 垂直方向の中央揃え */
-    /*height: 100%; !* `td` の高さいっぱいに広げる *!*/
     padding: 0; /* 余白をなくして中央配置を正確にする */
     font-size: 18px;
     background-color: #fafafa;
     color: #682A19;
-    /*font-weight: normal;*/
 }
 .td input {
-    /*display: flex;*/
-    /*justify-content: center;*/
-    /*align-items: center;*/
     width: 100%; /* 入力欄をセルの幅いっぱいに広げる */
     box-sizing: border-box; /* padding, border を含めて width を調整 */
     border: none;
-    /*background-color: #fafafa;*/
-    /*color: #682A19;*/
-    /*text-align: center;*/
-    /*font-size: 20px;*/
 }
 
 
 input[type="text"], input[type="date"], input[type="submit"] {
     border: none;
     font-size: 16px;
-
 }
 
 td select {
@@ -88,16 +73,12 @@ td select {
     box-sizing: border-box;  /* padding を考慮してはみ出さないようにする */
     border: none;  /* 枠線を削除 */
     outline: none; /* フォーカス時の枠線も削除 */
-    /*background: transparent; !* 背景を透明にする（必要に応じて） *!*/
     text-align: center; /* 選択肢のテキストを中央揃え */
     text-align-last: center; /* 選択リスト自体も中央揃え */
     font-size: 16px;
     background-color: #fafafa;
     color: #682A19;
     font-weight: normal;
-    /*display: flex;*/
-    /*justify-content: center;*/
-    /*align-items: center;*/
 }
 
 .tsk_content input {
@@ -123,7 +104,6 @@ td select {
 .allnemu_button, .update_button {
     margin: 10px;
     padding: 10px;
-    /*color: #B85C38;  !* テキストカラー（メインカラー） *!*/
 }
 
 .update_button input[type="submit"], .allnemu_button a {
@@ -132,15 +112,12 @@ td select {
     align-items: center; /* 縦中央揃え */
     text-decoration: none; /* aタグの下線を消す */
     text-align: center;
-    /*width: 100%;*/
-    /*height: 100%;*/
-    border: none;
     font-size: 16px;
     padding: 10px 20px;
-    /*background-color: #f0f0f0;*/
     color: #B85C38;  /* テキストカラー（メインカラー） */
-    /*color: black;*/
-    /*text-align: center;*/
+    border: 1px solid #B85C38;
+    border-radius: 50px;
+    background-color: #fafafa;
 }
 
 .tsk_tittle {
