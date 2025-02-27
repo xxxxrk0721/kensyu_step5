@@ -1,0 +1,90 @@
+
+.header_inner {
+    margin: 0 auto;
+    width: 90%;
+}
+
+.main_inner {
+    margin: 0 auto;
+    width: 90%;
+}
+
+.button_area {
+    display: flex;
+    justify-content: right;
+    text-align: center;
+    border-bottom: 1px solid #B85C38;
+}
+
+.allnemu_button, .search_button {
+    margin: 10px;
+    padding: 10px;
+}
+
+.allnemu_button a, .search_button a {
+    background-color: #f0f0f0;
+    color: #B85C38;
+    text-decoration: none; /* aタグの下線を消す */
+    font-size: 16px;
+    padding: 10px 20px;
+}
+
+.tsk_tittle {
+    display: block;
+    text-align: center;
+    margin: 80px auto 30px auto;
+}
+
+.tsk_tittle h1 {
+    margin: 80px auto 0 auto;
+    color: #B85C38;
+}
+
+th:nth-child(1), td:nth-child(1) { width: 5%; }
+th:nth-child(2), td:nth-child(2) { width: 29%; }
+th:nth-child(3), td:nth-child(3) { width: 10%; }
+th:nth-child(4), td:nth-child(4) { width: 10%; }
+th:nth-child(5), td:nth-child(5) { width: 46%; }
+
+table {
+    width: 100%; /* テーブル全体の幅を100%にする */
+    table-layout: fixed; /* 列の幅を均等にする */
+    border-collapse: collapse; /* 枠線をスッキリ表示 */
+    margin: 0 auto;
+    background-color: #fff;
+}
+
+th {
+    border: 1px solid #C97D5D; /* 枠線をつける */
+    padding: 10px; /* 余白を設定 */
+    text-align: center; /* 文字を中央揃え */
+    word-wrap: break-word; /* 長い単語を折り返す */
+    background-color: #E3A98A; /* ヘッダーの背景色 */
+    color: #fff;
+}
+
+td {
+    border: 1px solid #C97D5D; /* 枠線をつける */
+    text-align: center; /* 文字を中央揃え */
+    height: 50px;
+    font-size: 18px;
+    background-color: #fafafa;
+    color: #682A19;
+}
+
+.status p {
+    font-size: 18px;
+    color: #B85C38;
+}
+
+footer {
+    padding: 20px;
+}
+
+html {
+    background-color: #EFEFEF;
+}
+
+body {
+    font-family: "Arial Rounded MT Bold", "Hiragino Maru Gothic Pro", "Yu Gothic Rounded", "Verdana", sans-serif;
+}

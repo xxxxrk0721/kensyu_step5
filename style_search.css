@@ -1,0 +1,106 @@
+
+.header_inner {
+    margin: 0 auto;
+    width: 90%;
+}
+
+.main_inner {
+    margin: 0 auto;
+    width: 90%;
+}
+
+.button_area {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    border-bottom: 1px solid #B85C38;
+}
+
+.allmenu_button {
+    margin: 10px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.allmenu_button a {
+    display: flex;
+    justify-content: center; /* 横中央揃え */
+    align-items: center; /* 縦中央揃え */
+    text-decoration: none; /* aタグの下線を消す */
+    /*text-align: center;*/
+    border: none;
+    font-size: 16px;
+    /*padding: 10px 20px;*/
+    /*background-color: #f0f0f0;*/
+    color: #B85C38;
+}
+
+.status_name {
+    margin-right: 5px;
+    /*color: #B85C38;*/
+}
+
+/*.syori_status option {*/
+
+/*}*/
+
+.status_name p {
+    color: #B85C38;
+    font-size: 16px;
+    /*margin-right: 10px;*/
+}
+
+select {
+    border: none;  /* 枠線を削除 */
+    background-color: #EFEFEF;
+    color: #B85C38;
+    /*border-bottom: ;*/
+}
+
+/* プルダウンとボタンを同じ高さに調整 */
+form select,
+form input[type="submit"] {
+    height: 40px; /* ボタンと同じ高さ */
+    font-size: 16px;
+    padding: 5px;
+    box-sizing: border-box;
+    border: none;  /* 枠線を削除 */
+    background-color: #EFEFEF;
+    /*border-color: #B85C38;*/
+    color: #B85C38;
+    border-bottom: 1px solid #B85C38;
+}
+
+/* フォーム内の要素を横並びに */
+form {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    margin: 10px;
+    padding: 10px;
+    /*border-bottom: #B85C38;*/
+}
+
+
+
+
+.tsk_tittle {
+    display: block;
+    text-align: center;
+    margin: 80px auto 30px auto;
+}
+
+.tsk_tittle h1 {
+    margin: 80px auto 0 auto;
+    color: #B85C38;
+}
+
+html {
+    background-color: #EFEFEF;
+}
+
+body {
+    font-family: "Arial Rounded MT Bold", "Hiragino Maru Gothic Pro", "Yu Gothic Rounded", "Verdana", sans-serif;
+}

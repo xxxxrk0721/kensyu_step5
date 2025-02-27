@@ -1,0 +1,51 @@
+html {
+    background-color: #EFEFEF;
+}
+
+body {
+    font-family: "Arial Rounded MT Bold", "Hiragino Maru Gothic Pro", "Yu Gothic Rounded", "Verdana", sans-serif;
+}
+
+.main_inner {
+    margin: 0 auto;
+    width: 90%;
+}
+
+.button_area {
+    display: flex;
+    justify-content: right;
+    text-align: center;
+    border-bottom: 1px solid #B85C38;
+}
+
+.allmenu_button {
+    margin: 10px;
+    padding: 10px;
+}
+
+.allmenu_button a {
+    background-color: #f0f0f0;
+    color: #B85C38;
+    text-decoration: none; /* aタグの下線を消す */
+    font-size: 16px;
+    padding: 10px 20px;
+}
+
+.update_output {
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    color: #B85C38;
+    /*font-weight: bold;*/
+    margin: 20px;
+    /*font-size: 10px;*/
+}
+
+.update_output p {
+    text-align: center;
+    font-size: 30px;
+}
+
+.update-fail, .update-nochange {
+    color: #a0a0a0;
+}
