@@ -94,6 +94,40 @@ $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </td>
                     </tr>
                 <?php endforeach; ?>
+                <tr class="tsk_content">
+                    <td>
+                        <!-- ID を表示（編集不可） -->
+<!--                        <input type="text" name="tasks" placeholder="ID">-->
+                        <!-- ID を隠しフィールドとしても送信 -->
+<!--                        <input type="hidden" name="tasks" value="ID">-->
+                        <input type="text" name="newID" placeholder="ID" readonly>
+                    </td>
+                    <td>
+                        <input type="text" name="newname" placeholder="タスク名称を入力してください">
+                    </td>
+                    <td>
+                        <input type="date" name="newdateto">
+                    </td>
+                    <td>
+                        <input type="date" name="newdatefrom">
+                    </td>
+                    <td>
+                        <input type="text" name="newtasks" placeholder="タスクの詳細を入力してください">
+                    </td>
+                    <td>
+                        <select name="newstatus">
+                            <option value=1 >未着手</option>
+                            <option value=2 >対応中</option>
+                            <option value=3 >完了</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select name="newdelflg">
+                            <option value=0 >有効</option>
+                            <option value=1 >削除</option>
+                        </select>
+                    </td>
+                </tr>
             </table>
         </form>
     </div>

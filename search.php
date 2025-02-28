@@ -60,11 +60,26 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="ymd_name">
                         <p>終了日:</p>
                     </div>
-                    <input type="date" name="emd_ymd_search" value="">
+                    <input type="date" name="end_ymd_search" value="">
                     <input type="submit" value="検索">
                 </form>
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll("input[type='date']").forEach(input => {
+                input.addEventListener("change", function() {
+                    const datePattern = /^\d{4}\/\d{2}\/\d{2}$/; // yyyy/mm/dd フォーマット
+                    const value = this.value.replace(/-/g, "/"); // ハイフンをスラッシュに変換
+
+                    if (!datePattern.test(value)) {
+                        alert("日付は yyyy/mm/dd の形式で入力してください。");
+                        this.value = ""; // 入力をクリア
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

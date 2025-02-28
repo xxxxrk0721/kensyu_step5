@@ -84,7 +84,6 @@
                                 }
                             ?>
                         </td>
-<!--                        <td><input type="submit" value="編集"></td>-->
                     </tr>
 
                 <?php endforeach; ?>

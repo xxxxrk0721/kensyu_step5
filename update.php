@@ -4,6 +4,9 @@
     $updateMessages = "";
     $tskMessages = "";
     $tskcontentMessages = "";
+    $new_tskMessages = "";
+    $new_tskcontentMessages = "";
+    $insdataMessages = "";
     $noChangeCount = 0; // 変更がなかった回数をカウント
     $valCheck = 0; // バリエーションチェック用のフラグ
 
@@ -87,10 +90,85 @@
                 } else {
                     $noChangeCount++; // 変更がなかった回数をカウント
                 }
+                if ($noChangeCount === count($tasks)) {
+                    $updateMessages .= "<p class='update-nochange'>変更した項目はありません</p>";
+                }
             }
         }
-        if ($noChangeCount === count($tasks)) {
-            $updateMessages .= "<p class='update-nochange'>変更した項目はありません</p>";
+
+        if (!empty($_POST['newname']) && !empty($_POST['newdateto']) && !empty($_POST['newdatefrom']) && !empty($_POST['newtasks'])) {
+            require_once "db_connect.php"; // DB接続ファイルを読み込む
+            $pdo = db_connect(); // DB接続を取得
+
+            // `POST` データを配列として取得
+            $newname = $_POST['newname']; // 配列で受け取ることを想定
+            $newdateto = $_POST['newdateto']; // 配列で受け取ることを想定
+            $newdatefrom = $_POST['newdatefrom']; // 配列で受け取ることを想定
+            $newtasks = $_POST['newtasks']; // 配列で受け取ることを想定
+            $newstatus = $_POST['newstatus']; // 配列で受け取ることを想定
+            $newdelflg = $_POST['newdelflg']; // 配列で受け取ることを想定
+
+            $newname_len = trim($newname ?? "");
+            $new_length_task_name = mb_strlen($newname_len, "UTF-8");
+            $task_content_len = trim($newtasks ?? "");
+            $new_length_task_content = mb_strlen($task_content_len, "UTF-8");
+
+            $valCheck = 0;
+
+            if ($new_length_task_name > 19 || $new_length_task_name < 1) {
+                $new_tskMessages .= "<p class='not-success'>タスク名を20文字以下、1文字以上で入力してください</p>";
+                $valCheck = 1;
+            }
+
+            if ($new_length_task_content > 49 || $new_length_task_content < 1) {
+                $new_tskcontentMessages .= "<p class='not-success'>タスク内容を50文字以下、1文字以上で入力してください</p>";
+                $valCheck = 1;
+            }
+
+            if ($valCheck === 1) {
+                // 何もしない
+            }else{
+
+                // UPDATE文の準備（1レコードずつ更新）
+                $sql = "INSERT INTO task_list 
+                        SET task_name = :task_name,
+                            ymd_to = :ymd_to,
+                            ymd_from = :ymd_from,
+                            task_content = :task_content,
+                            syori_status = :syori_status,
+                            del_flg = :del_flg,
+                            update_ymd = :update_ymd,
+                            ent_ymd = :ent_ymd";
+
+                $stmt_update = $pdo->prepare($sql);
+
+                $update_ymd = date('Y-m-d H:i:s');  // 現在の日時を取得
+                $ent_ymd = date('Y-m-d H:i:s');  // 現在の日時を取得
+
+                // 各レコードごとにバインドする
+//                $stmt_update->bindValue(':id', (int)$id, PDO::PARAM_INT);
+                $stmt_update->bindValue(':task_name', (string)$newname, PDO::PARAM_STR);
+                $stmt_update->bindValue(':ymd_to', (string)$newdateto, PDO::PARAM_STR);
+                $stmt_update->bindValue(':ymd_from', (string)$newdatefrom, PDO::PARAM_STR);
+                $stmt_update->bindValue(':task_content', (string)$newtasks, PDO::PARAM_STR);
+                $stmt_update->bindValue(':syori_status', (int)$newstatus, PDO::PARAM_INT);
+                $stmt_update->bindValue(':del_flg', (int)$newdelflg, PDO::PARAM_INT);
+                $stmt_update->bindValue(':update_ymd', $update_ymd, PDO::PARAM_STR);
+//                $stmt_update->bindValue(':update_ymd', null, PDO::PARAM_NULL);
+                $stmt_update->bindValue(':ent_ymd', $ent_ymd, PDO::PARAM_STR);
+                // 変更があった場合に UPDATE を実行
+                if ($stmt_update->execute()) {
+                    $insdataMessages .= "<p class='update-success'>タスクの内容を新規登録しました !!!</p>";
+                } else {
+                    $insdataMessages .= "<p class='update-fail'>タスクの新規登録ができませんでした ××</p>";
+                }
+                $noChangeCount++; // 変更がなかった回数をカウント
+            }
+
+        }else{
+            if ($noChangeCount === count($tasks)) {
+                $insdataMessages .= "<p class='update-nochange'>新規登録した項目はありません</p>";
+            }
         }
     }
 ?>
@@ -121,7 +199,9 @@
                 <?= $updateMessages ?>
                 <?= $tskMessages ?>
                 <?= $tskcontentMessages ?>
-
+                <?= $new_tskMessages ?>
+                <?= $new_tskcontentMessages ?>
+                <?= $insdataMessages ?>
             </div>
         </div>
     </div>

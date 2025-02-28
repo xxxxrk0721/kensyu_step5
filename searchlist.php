@@ -4,7 +4,7 @@ require_once "db_connect.php"; // DB接続ファイルを読み込む
 $pdo = db_connect(); // DB接続を取得
 
 // フォームからのデータ取得
-var_dump($_POST);
+//var_dump($_POST);
 $task_name = $_POST['task_name'] ?? '';
 $str_ymd_search = $_POST['str_ymd_search'] ?? '';
 $end_ymd_search = $_POST['end_ymd_search'] ?? '';
@@ -13,34 +13,28 @@ $syori_status = $_POST['syori_status'] ?? '';
 // 検索処理
 $results = [];
 
-if (!empty($task_name) || !empty($str_ymd_search) || !empty($end_ymd_search) || !empty($syori_status)) {
+if (!empty($task_name) || (!empty($str_ymd_search) && !empty($end_ymd_search)) || !empty($syori_status)) {
     // 検索用SQLの初期化
-    $sql = "SELECT * FROM task_list WHERE 1=1";
+    $sql = "SELECT * FROM task_list WHERE del_flg=0";
     $params = [];
+
+    // ステータス検索の条件を追加
+    if (!empty($syori_status)) {
+        $sql .= " AND syori_status = :syori_status";
+        $params[':syori_status'] = $syori_status;
+    }
 
     // タスク名検索の条件を追加
     if (!empty($task_name)) {
-        $sql .= " AND task_name LIKE :task_name AND del_flg=0";
+        $sql .= " AND task_name LIKE :task_name";
         $params[':task_name'] = "%{$task_name}%";
     }
 
-    if (!empty($str_ymd_search) && !empty($emd_ymd_search)) {
-
+    if (!empty($str_ymd_search) && !empty($end_ymd_search)) {
         // SQL文で `BETWEEN` を使用
-        $sql .= " AND (ymd_to BETWEEN :str_ymd_search AND :emd_ymd_search) AND (ymd_from BETWEEN :str_ymd_search AND :emd_ymd_search) AND del_flg=0";
+        $sql .= " AND (ymd_to >= :str_ymd_search AND ymd_from <= :end_ymd_search)";
         $params[':str_ymd_search'] = $str_ymd_search;
-        $params[':emd_ymd_search'] = $emd_ymd_search;
-    }
-
-// デバッグ用ログ
-    error_log("実行SQL: " . $sql);
-    foreach ($params as $key => $value) {
-        error_log("バインド: $key = $value");
-    }
-    // ステータス検索の条件を追加
-    if (!empty($syori_status)) {
-        $sql .= " AND syori_status = :syori_status AND del_flg=0";
-        $params[':syori_status'] = $syori_status;
+        $params[':end_ymd_search'] = $end_ymd_search;
     }
 
     // SQL実行準備
@@ -48,6 +42,7 @@ if (!empty($task_name) || !empty($str_ymd_search) || !empty($end_ymd_search) || 
 
     // バインドパラメータの設定
     foreach ($params as $key => $value) {
+//        var_dump($key, $value);
         $stmt->bindValue($key, $value, PDO::PARAM_STR);
     }
 
